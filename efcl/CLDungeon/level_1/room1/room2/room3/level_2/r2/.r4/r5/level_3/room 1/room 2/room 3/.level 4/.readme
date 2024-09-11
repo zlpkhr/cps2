@@ -1,0 +1,26 @@
+
+= Now starts your real journey
+
+
+Upon entering this room, you are blinded with an intense light: you just
+found the way out and are getting back to the surface!
+
+Your wanderings through this little maze now ends. However, you realize
+you learned a lot. Now, you know how to:
+
+* get your position in a filesystem and move around it (`pwd`, `cd`,
+`ls`)
+* read a text file (`cat`, `less`)
+* get informations on files and directories (`file`, `ls`)
+* move/rename a file or a directory (`mv`)
+* get manuals for commands (`man`)
+* get the list of all the commands you recently typed (`history`)
+* copy files (`cp`)
+* remove files (`rm`)
+* create directories (`mkdir`)
+* remove directories (`rmdir`)
+* manage running processes on your system (`ps`, `top`, `kill`)
+
+Now, all other commands are at your fingertips. You will be able to
+work more efficiently, creating scripts and automating tasks.
+

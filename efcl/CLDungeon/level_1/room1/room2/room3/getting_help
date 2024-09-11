@@ -1,0 +1,48 @@
+
+= Getting help on command usage
+
+All usual commands are thoroughly documented.
+
+They either have online help (often accessible via the `-h` or `--help`
+option), or a man page, or both.
+
+The man pages are organized into sections. Most of the commands seen
+here are documented in section 1.
+
+To access the manual for a command, simply use the `man`, passing as a
+parameter the name of the command of which you want to get the manual.
+That's a lot of __commands__ but, after all, that's what this course is
+all about!
+
+Some of the manual pages are extremely large.
+To make it easier to find your way around, there is always a short
+description of the command at the beginning of the manual page (the NAME
+paragraph), followed by its various invocation methods (the SYNOPSIS
+paragraph).
+Finally, you can search for text with the `/` command when reading a
+manual.
+
+Funnily enough, the `man` command itself has a man page in which you can
+find the description of all the sections!
+
+== Info
+
+For the sake of completeness, we should mention the existence, for some
+years now of an alternative documentation system.
+
+The `info` command gives access to the equivalent of a book in which all
+commands are documented.
+The content of this documentation is often identical to that of the
+manual pages, but sometimes has more detail.
+Navigating through the pages of this book is however laborious.
+
+== Internet
+
+Finally, it is sometimes tempting to get the documentation for a command
+by searching the Internet.
+However, we discourage this practice.
+Indeed, commands evolve and, from one system to another, a same command
+may have huge differences in behavior and accept different options.
+The only valid documentation is therefore the one that is provided with
+the command when it is installed in the operating system.
+

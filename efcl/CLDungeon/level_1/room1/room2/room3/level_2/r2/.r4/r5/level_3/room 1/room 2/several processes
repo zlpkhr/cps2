@@ -1,0 +1,57 @@
+
+= Create processes!
+
+We want you to create several CPU hungry processes, that will execute
+simultaneously on your computer. To do do, you will create several
+terminal windows. This is possible only if you use a native Linux or
+a native MacOS. If you use WSL on Windows, you will have to use a
+__terminal multiplexer__ like `screen` or `tmux`. Instructions on how to
+use `tmux` are given at the end of this document.
+
+. Create three more terminal windows (for a total of four).
+. In the first one (or the largest one) execute the `top` utility.
+. In the second one, copy the following one-liner (mind the spaces):
++
+----
+$> while [ 1 ]; do :; done
+----
++
+. Check for changes in the `top` window. What do you notice?
+. In the third window, launch the same one-liner again.
+. What does `top` display? Is the total percentage of CPU usage
+consistent with what you might expect?
+
+It would be nice now to stop all these greedy processes...
+Check the next room to learn more about it.
+
+== Using Tmux
+
+`tmux` is a __terminal multiplexer__. It is able to create several
+__windows__ inside a single screen. It can then create several
+__panes__ inside each window.
+
+You can control `tmux` several ways, the main ones being with keystrokes
+and special hotkeys or with command line arguments.
+
+As it may takes some time to get used to this utility, you will use the
+following command to launch `tmux` with 4 pre-created panes: one on the
+left hand side, the other three evenly distributed on the right hand
+side of the terminal window. The pane on the left is ideal for `top`
+hosting as it should be the largest one.
+
+----
+$> tmux new \; \split-window -h \; \split-window -v \; \split-window -v \; \select-layout main-vertical
+----
+
+Spaces are mandatory, as well as backslashes.
+
+Once all the shells are launched inside each pane, you can move from
+one pane to another with the following key sequences:
+
+. [Ctrl+B] then [left_arrow] to move to the pane on the left of the current pane
+. [Ctrl+B] then [right_arrow] to move to the pane on the right of the current pane
+. [Ctrl+B] then [up_arrow] to move to the pane above the current pane
+. [Ctrl+B] then [down_arrow] to move to the pane below the current pane
+
+You can close a pane by quitting the shell inside it, using the [Ctrl+D]
+shortcut or typing `exit`.

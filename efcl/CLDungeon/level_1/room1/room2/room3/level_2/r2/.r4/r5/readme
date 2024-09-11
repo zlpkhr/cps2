@@ -1,0 +1,18 @@
+
+= A detailed view
+
+It is possible to get more information about files and directories using
+the `ls` command.
+With its `-l` option it gives a detailed view of what's in a diretory in
+which you can see, amongst other things, the size of the files in bytes
+and it's creation date.
+
+Revisit some rooms to see the detailed information of each file and
+directory there.
+
+Of course, it is possible to combine options of a single command ...
+For example, you may want to list files by their creation time with the
+`-t` option, and reverse the order with the `-r` option.
+This would be the following command: `ls -tr`.
+You may also want a __long__ listing ordered by reverse date!
+

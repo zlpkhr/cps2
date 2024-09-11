@@ -1,0 +1,50 @@
+
+= Stop a process
+
+There are several ways to stop a running process. The first one being to
+close properly the process (that's what you do when you press [q] while
+reading a text with `less` or `man`). Unfortunately, this is not always
+possible. One has to find other ways, often less gentle. The right
+method then, is to send a signal to the process to kill. Right, but
+then, how to send the signal to the right process as there are lots of
+them running at the same time on our system?
+
+Each process, when created by the operating system, is given an unique
+identifier (the so called __Process ID__ or PID) and commands such as
+`ps` and `top` display this ID.
+
+Every process on the system reacts to various signals (see the
+`signal(7)` man page). Some signals are courteous ones, while others may
+be more brutal.
+
+From a user point of view, signals are sent using the `kill` command:
+
+----
+$> kill [-signal] <pid>
+----
+
+For example, to kill the process owning ID 1234 with a signal 9, you
+could use the following command:
+
+----
+$> kill -9 1234
+----
+
+If no `signal` is given, SIGTERM (15) is used as a default. It is a
+courteous signal that nicely asks the process to quit.
+
+However, sometimes the process has reached such a bad state, it is
+unable to react to SIGTERM. You need to use something more
+authoritarian: SIGKILL (9) kills the process (this is what usually
+happens when using the [Ctrl+C] shortcut).
+
+Some processes, once killed, remain present in the system. They are
+called zombie processes. They cannot be killed (as they are already
+dead) and you have to wait until they disappear, whether because the
+system managed to get rid of them or because your computer was
+restarted.
+
+End the greedy processes you created earlier sending them SIGTERM or
+SIGKILL signals, or even using [Ctrl+C]. Are all these methods really
+equivalent?
+

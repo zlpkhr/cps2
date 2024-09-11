@@ -1,0 +1,19 @@
+# This script is made to alter the default behaviour
+# of the cd builtin command.
+# To use it, you have to "source" it in your shell
+# as shown below:
+# $> source .bonus
+
+unset cd
+function cd() {
+	builtin cd "$@" >/dev/null 2>&1
+	status=$?
+
+	[ -f .readme ] && cat .readme
+
+	if [ $status -eq 0 ]; then
+		echo "Now entering the '"$(basename "$PWD")"' directory"
+	else
+		echo "You don't leave the '"$(basename "$PWD")"' directory"
+	fi
+}

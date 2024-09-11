@@ -1,0 +1,18 @@
+
+= Issue about spaces in file names
+
+It is possible to use the ` ` (space) character in files and directories
+names, even tho this is discouraged (it raises a lot of concerns with
+commands, scripts, etc.)
+
+However, you may still want to use it.
+To do so, you could whether enclose the entire name in double quotes,
+or __protect__ (precede) each space with the escape character `\`
+(backslash).
+
+For example, you can move to the directory `room 1` using one of the
+following commands:
+
+. cd "room 1"
+. cd room\ 1
+

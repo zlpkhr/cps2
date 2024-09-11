@@ -1,0 +1,29 @@
+
+= Process management
+
+Every time you launch a program, whether using the command line interface
+or the graphical interface, a new process is created by the system.
+
+This process, bound to a specific user, uses system resources: memory
+and CPU.
+
+Therefore, on a Unix system, it is possible to monitor running
+processes. You may use one of the two commands below:
+
+`top`:: an interactive program that provides a dynamic real-time view of
+your running system.
+
+`ps`:: displays information about a selection of the active processes.
+Lots of options makes `ps` a highly versatile utility.
+
+Use `top` to monitor the activity of your system (`q` to quit). What
+is the total amount of memory available on your system? How many
+processors (CPUs) does your system have?
+
+List the running processes:
+
+. first using `ps`;
+. then using `ps -u <user> u` (replace `<user>` with your actual user
+name);
+. finally using `ps -efal`.
+

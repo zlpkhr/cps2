@@ -1,0 +1,8 @@
+
+= A `cd` advanced option
+
+It is possible to set the current directory to the directory before the
+last call to `cd`.
+To do so, you simply need to pass the `-` argument to `cd`: `cd -` will
+therefore change the current directory to the previous directory.
+

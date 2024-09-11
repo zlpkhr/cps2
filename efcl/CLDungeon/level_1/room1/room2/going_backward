@@ -1,0 +1,22 @@
+
+= Moving freely inside the filesystem
+
+Using the 'cd' command you can move from a directory to another but
+only from the root fo the leaves.
+
+So? Is it impossible to move backward?
+
+Of course, you can move to a directory higher in the filesystem giving
+its absolute path from the root. But this may become a long and tedious
+process!
+That's why it is more advisable to use the special directory `..`
+(double dot).
+It exists everywhere and always refers to the parent directory of the
+current directory.
+
+`..` even exists at the root of the filesystem, but obviously you can't
+go back any further than the root of the filesystem.
+
+This special directory is used to move around inside the filesystem but
+may also be used to express relative paths.
+

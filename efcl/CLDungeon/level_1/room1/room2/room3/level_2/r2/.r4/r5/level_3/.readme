@@ -1,0 +1,14 @@
+
+= Entering level 3...
+
+It comes to your knowledge that other commands exist to work with files
+and directories:
+
+* `cp`   :         copy files
+* `mkdir`: create directories
+* `rm`   :       remove files
+* `rmdir`: remove directories
+
+Each one of these commands have a manual page in section 1.
+You should browse through them to learn more.
+

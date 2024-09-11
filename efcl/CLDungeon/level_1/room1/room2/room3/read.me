@@ -1,0 +1,25 @@
+
+= Reading long texts
+
+To read a text that is long (longer than what the terminal window can
+display), the `cat` command is not very suitable.
+
+It is more convenient to use a command that allows you to move around
+the text with the arrow keys and that has a mechanism to search the text
+for words.
+
+The `less` command was designed with this purpose in mind.
+It has an online help accessible by pressing the [H] key when reading a
+text file.
+
+The main commands accessible from the `less` command are :
+
+. `/`: search for an expression in the text after the cursor
+. `?`: search for an expression in the text before the cursor
+. `n`: move to the next occurrence of the searched text
+. `N': move to the previous occurrence of the searched text
+. `Q': quit
+
+There is also the `more` historical command, but it has __less__
+functionality.
+

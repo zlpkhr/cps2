@@ -1,0 +1,34 @@
+
+
+Using the Shell it is possible to search the filesystem for files (and
+find them!) matching various criteria.
+
+This is the job of `find`. Give it a directory where to start the search
+and it will look for files and/or directories matching some criteria in
+this directory and all the subsequent directories too.
+
+The syntax of the `find` command is quite unusual and may seem
+complicated at first glace (it is indeed!). However, it is possible to
+make some quick search when you get the rough idea.
+
+Below are some examples of usage of this command.
+
+Search the `/etc` directory for files and directories whose name contain
+the `_` character:
+$> find /etc -name '*_*'
+
+Search, starting from the current directory, for all the files (and only
+files) whose name end with `.txt`:
+$> find . -type f -name '*.txt'
+
+Search, starting from the current directory, for all the files (and only
+files) whose name end with `.txt` or `.me`:
+$> find . -type f -name '*.txt' -o -name '*.me'
+
+Print out the name of all the sub directories of the current directory:
+$> find . -type d
+
+
+`find` accepts a lot more of criteria! Read its manual page (section 1)
+to learn more.
+

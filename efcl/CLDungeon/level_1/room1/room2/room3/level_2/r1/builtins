@@ -1,0 +1,15 @@
+
+= Shell internal commands
+
+Most commands are system commands, i.e. they are separate programs that
+the command interpreter (in this case the Bash shell) will execute on
+your request.
+You can write such commands yourself!
+
+Some commands however are internal to the shell, the so called
+"builtins".
+You hav already been using one of tyhem without even knowing it: `cd`.
+
+These internal commands are described in a separate man page:
+`builtins(7)`.
+

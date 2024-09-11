@@ -1,0 +1,22 @@
+# This file is hidden by default.
+# It contains a set of shell commands the alter the
+# default behaviour of some commands.
+# To make it actually happen, you need to 'source'
+# this file into the shell as follows:
+# $> source .rc
+
+# ls now colors its output, allowing us to get what
+# type of files are there at a glance.
+alias ls="ls --color -F"
+
+# The new 'cd' looks for a 'readme' file in the
+# target directory and displays it if one is found.
+function cd() {
+	builtin cd "$1"
+	[ -f .readme ] && cat .readme
+}
+
+# list the last commands issued by the user with
+# a timestamp.
+alias ht='HISTTIMEFORMAT="%d/%m/%Y %T " history'
+

@@ -1,0 +1,21 @@
+
+= Summary
+
+Welcome to level 2!
+
+You now know the following basic but powerful commands:
+
+ * `ls`         :            list the content of the current directory
+ * `cat file`   :                         display the content of `file`
+ * `cd dir`     :                    set the current directory to `dir`
+ * `cd ..`      :                  move up one level in the filesystem
+ * `pwd`        : print out the absolute path of the current directory
+ * `file f`     :                        display information about `f`
+ * `man command`:                       display the `command` man page
+ * `less file`  :  display the content of `file` and move around in it
+
+In this level you will learn to use these commands in depth.
+
+But by the way, do you know what commands you have typed so far?
+The `history` __command__ should tell you!
+
