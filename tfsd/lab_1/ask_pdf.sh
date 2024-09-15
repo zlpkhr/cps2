@@ -23,8 +23,8 @@ pdf_text=$(cat "$TMPDIR/$pdf_file")
 
 data=$(jq -n \
     --arg model "gemma:2b" \
-    --arg prompt "You are a PDF assistant. Your job is to answer the following question: $question, based only on the following content from the PDF file: $pdf_text" \
+    --arg prompt "You are a PDF assistant. Your job is to answer the following question: $question, based only on the following content from the PDF file: $pdf_text." \
     --argjson stream false \
     '{model: $model, prompt: $prompt, stream: $stream}')
 
-curl -s http://localhost:11434/api/generate -d "$data" | jq ".response"
+echo -e "$(curl -s http://localhost:11434/api/generate -d "$data" | jq -r ".response")"
