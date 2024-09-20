@@ -1,0 +1,121 @@
+# Exercise 1
+
+# Start your terminal application
+chsh -s /bin/bash
+
+# Find out where you are located in the filesystem right after you log in.
+pwd
+
+# Make your computer display Hello on the terminal.
+echo Hello
+
+# Change directory to /tmp (this is a system wide directory to store temporary files) and list its content.
+cd /tmp
+
+# You can list content in several ways. Reading the manual of the ls command, figure out how to display the list of files
+
+# in long format;
+ls -l
+
+# sorted by time, reversed;
+ls -tr
+
+# both at the same time.
+ls -trl
+
+# Travel to the / directory and get the list of all files and directories located at the root of the filesystem.
+ls -a
+
+# Go back to your home directory (the one you where in when you first logged in). There are several ways to do this. Try to find at least two.
+cd
+cd ~
+
+# From there, display the content of the file named /etc/services
+cat /etc/services
+
+
+# Exercise 2
+
+# Inside your homedir, create a directory called LFM and make it your current directory. You can check you reached the right destination using which command?
+cd
+mkdir LFM
+cd LFM
+pwd
+
+# Without changing directory, find all the files in /usr/share/doc with a name starting with README and a size between 2 and 10 kilobytes.
+find /usr/share/doc -type f -name "README*" -size +2k -size -10k
+
+# Copy one of them to your current directory (the one from gzip would be great if it appears in the list, but anyone will do). If you are on a Mac and the /usr/share/doc directory does not exist, use any README file on your system whose size is less than 10kB.
+cp ~/Downloads/README.md .
+
+# Find out how many characters, words and sentences this file contains (you may want to define what a sentence is).
+wc -m ./README.md
+wc -w ./README.md
+# Sentence is anything separated by dot
+grep -o '\.' ./README.md | wc -l 
+
+# Create a file named rubish.docx by echoing some text in it (using a redirection we will explain later):
+
+# $> cat > rubish.docx
+# Type anything you want (it may make some sense to type something useful) and end your input by hitting Ctrl+D (this is keyboard shortcut to inputting EOF — End Of File).
+> cat > rubish.docx
+
+# What size is your new file? You can find out using two different easy ways (just use simple well known commands). Give them both, explaining your choice.
+ls -lh
+# 39B
+du -h rubish.docx
+# 4.0K
+# Using ls is better for me, because it shows actual size of the file and not the allocated space on disk
+
+# What kind of app can open this file? What is its type?
+file --mime rubish.docx
+# rubish.docx: text/plain; charset=us-ascii
+# Basically any text editor can open this, because we insereted raw text into it, file but usually .docx files are meant to be used with compatible programs like Microsoft Word
+
+# Print the content of this file in the terminal. Does it contain exactly what you typed in earlier?
+cat rubish.docx
+# Yes, it has same long sequence of 'a' characters i've put in
+
+# Create a directory named temp inside the LFM folder and move the rubish.docx file there, changing its name to rubish.txt.
+mv rubish.docx temp/rubish.txt
+
+
+# Exercise 3
+
+# Using ssh log into the remote computer named ens-srv-eftcl.emse.fr (use credentials from the school). You won’t be able to access this computer from anywhere in the world, so you have to be in the school to work on it (from the eduroam or emse-invite Wi-Fi networks).
+ssh ext.a.zulpykhar@ens-srv-eftcl.emse.fr
+
+# On the remote computer, create a RFM directory under your homedir and make it you current directory. Then, using command line tools only, download the file https://ci.mines-stetienne.fr/cps2/course/efcl/data/lorem.ipsum and name it lorem_ipsum.txt.
+mkdir RFM
+cd RFM
+curl https://ci.mines-stetienne.fr/cps2/course/efcl/data/lorem.ipsum -u cps22024:cps22024 -o lorem_ipsum.txt
+
+# Make a copy of this file named place holder.txt (mind the white space in the file name and deal with it), then find out how many words and sentences it contains (this time you may consider a sentence as a part of the text ending with the . character).
+cp lorem_ipsum.txt place\ holder.txt
+wc -w place\ holder.txt
+# 400 place holder.txt
+grep -o '\.' ./place\ holder.txt | wc -l
+# 54
+
+# From another terminal, copy the local LFM/README to your remote RFM directory and compare it with the same file on the distant system if it exists. If the file on one side is compressed, you must decompress it before making the actual comparison.
+scp ~/LFM/README.md ext.a.zulpykhar@ens-srv-eftcl.emse.fr:~/RFM
+ssh ext.a.zulpykhar@ens-srv-eftcl.emse.fr "cat ~/RFM/README.md" | diff ~/LFM/README.md -
+
+# Synchronize the temp directory and its content with the remote computer (put it in the RFM folder).
+rsync -a ~/LFM/temp/ ext.a.zulpykhar@ens-srv-eftcl.emse.fr:~/RFM/temp/
+
+# Make some changes to the content of the tmp folder (add files, make changes to files already there, …​) of this hierarchy and try to synchronize again.
+touch 1.txt 2.txt
+mkdir testo
+cd testo
+mkdir hello
+touch hello/t.t
+touch asdasd.txt
+rsync -a ~/LFM/temp/ ext.a.zulpykhar@ens-srv-eftcl.emse.fr:~/RFM/temp/
+
+# Then, make some changes remotely and synchronize the other way (from remote to local).
+mkdir new_testo
+touch remote
+mkdir toto
+echo 'hello' > tttt.txt
+rsync -a ext.a.zulpykhar@ens-srv-eftcl.emse.fr:~/RFM/temp/ ~/LFM/temp/
