@@ -1,0 +1,15 @@
+weather,temperature,humidity,wind,playOut
+sunny,hot,high,no,no
+sunny,hot,high,yes,no
+cloudy,hot,high,no,yes
+rainy,cool,high,no,yes
+rainy,mild,dry,no,yes
+rainy,mild,dry,yes,no
+cloudy,mild,dry,yes,yes
+sunny,cool,high,no,no
+sunny,mild,dry,no,yes
+rainy,cool,dry,no,yes
+sunny,cool,dry,yes,yes
+cloudy,cool,high,yes,yes
+cloudy,hot,dry,no,yes
+rainy,cool,high,yes,no

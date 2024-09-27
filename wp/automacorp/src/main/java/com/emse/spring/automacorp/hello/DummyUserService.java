@@ -12,7 +12,7 @@ public class DummyUserService  implements  UserService{
     GreetingService greetingService;
 
     @Override
-    public void greetAll(List<String> name) {
-        name.forEach((n)->greetingService.greet(n));
+    public void greetAll(List<String> names) {
+        names.forEach((n)->greetingService.greet(n));
     }
 }

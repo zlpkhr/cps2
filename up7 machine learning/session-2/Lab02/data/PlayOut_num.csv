@@ -1,0 +1,15 @@
+weather,temperature,humidity,wind,playOut
+sunny,30,85,0,no
+sunny,27,90,1,no
+cloudy,28,78,0,yes
+rainy,21,96,0,yes
+rainy,20,80,0,yes
+rainy,18,70,1,no
+cloudy,18,65,1,yes
+sunny,22,95,0,no
+sunny,21,70,0,yes
+rainy,24,80,0,yes
+sunny,24,70,1,yes
+cloudy,22,90,1,yes
+cloudy,27,75,0,yes
+rainy,22,80,1,no
