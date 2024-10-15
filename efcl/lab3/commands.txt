@@ -1,0 +1,61 @@
+# Ex. 1
+
+curl -o place\ holder.txt -u cps22024:cps22024  https://ci.mines-stetienne.fr/cps2/course/efcl/data/lorem.ipsum
+
+vim place\ holder.txt
+
+# Vim:
+7G
+dd
+dd
+%s/lorem/lipsum/g
+%s/Lorem/Lipsum/g
+
+# Ex. 2
+curl -o 345.txt -L https://www.gutenberg.org/ebooks/345.txt.utf-8
+
+sed -n '/START OF THE PROJECT GUTENBERG EBOOK/,/END OF THE PROJECT GUTENBERG EBOOK/p' 345.txt | sed '1d;$d' > 345_tmp.txt
+
+wc 345.txt 345_tmp.txt
+#  -374   -3030  -19801
+# 15851  164351  890394 345.txt
+# 15477  161321  870593 345_tmp.txt
+# 31328  325672 1760987 total
+
+grep -o '  \+' 345_tmp.txt | wc -l
+# 751
+
+sed -i '' -e 's/  \+/ /g' -e 's/^ *//g' -e 's/ *$//g' 345_tmp.txt
+
+wc -w 345_tmp.txt
+# 161321 345_tmp.txt
+
+tr -d '[:punct:]' < 345_tmp.txt | tr -s ' ' | wc -w
+# 160639
+# Some punctuation characters may caused words to be counted separately and removing them made them merge and counted as single
+
+
+tr -d '[:punct:][:digit:]' < 345_tmp.txt | tr '[:upper:]' '[:lower:]' | tr -s ' ' '\n' | grep -v '^[[:space:]]*$' > tr_tmp.txt && mv tr_tmp.txt 345_tmp.txt
+
+sort 345_tmp.txt | uniq | wc -l
+# 12618
+
+grep -woi 'blood' 345_tmp.txt | wc -l
+# 102
+
+tr -d '[:punct:][:digit:]' < 345_tmp.txt | tr '[:upper:]' '[:lower:]' | tr -s ' ' '\n' | grep -v '^[[:space:]]*$' > tr_tmp.txt
+sort < tr_tmp.txt  | uniq -c | sort -nr | head -n 20 |> tr_tmp_c.txt                                                          
+echo "word,frequency" > common_words.csv && awk '{print $2","$1}' < tr_tmp_c.txt  >> common_words.csv
+
+tr -d '[:punct:][:digit:][:space:]' < 345_tmp.txt | tr '[:upper:]' '[:lower:]' | grep -o . > tr_l_tmp.txt
+sort < tr_l_tmp.txt | uniq -c | sort -nr | head -n 10 |> tr_tmp_lc.txt
+echo "letter,frequency" > common_letters.csv && awk '{print $2","$1}' < tr_tmp_lc.txt >> common_letters.csv
+
+curl -o 345.txt -L https://www.gutenberg.org/ebooks/345.txt.utf-8
+curl -o pg36.txt -L https://www.gutenberg.org/cache/epub/36/pg36.txt
+curl -o 1661.txt -L https://www.gutenberg.org/files/1661/1661-0.txt
+tr -d '[:punct:]' < 345.txt | tr '[:upper:]' '[:lower:]' | tr -s ' ' '\n' | grep -v '^[[:space:]]*$' | sort | uniq -c | sort -nr | head -n 20 | awk '{print $2}' > 20_345.txt
+tr -d '[:punct:]' < pg36.txt | tr '[:upper:]' '[:lower:]' | tr -s ' ' '\n' | grep -v '^[[:space:]]*$' | sort | uniq -c | sort -nr | head -n 20 | awk '{print $2}' > 20_pg36.txt
+tr -d '[:punct:]' < 1661.txt | tr '[:upper:]' '[:lower:]' | tr -s ' ' '\n' | grep -v '^[[:space:]]*$' | sort | uniq -c | sort -nr | head -n 20 | awk '{print $2}' > 20_1661.txt
+paste -d '\t' 20_345.txt 20_pg36.txt 20_1661.txt > 20.txt
+echo "rank,345.txt,pg36.txt,1661.txt" > words_rank.csv && awk '{print NR"\t"$0}' 20.txt >> words_rank.csv
