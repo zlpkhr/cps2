@@ -1,0 +1,18 @@
+1. 
+    display() - draw game state to the terminal:
+        $1 - game state, required or no output goes to terminal
+    IsValid() - validate that position of the cell withing game grid:
+        $1 - cell number, required as it is part of the position
+        $2 - row number, required as it is part of the position
+    IsAlive() - decide if cell will be alive following game logic:
+        $1 - game state, required to read cells around target cell -> GetCount()
+        $2 - cell number of target cell, required as we have to know where to check cells around -> GetCount()
+        $3 - cell state, required for calculation of the next state
+    GetCount() - counts cells around target cell:
+        $1 - game state, required to read cells around target cell
+        $2 - cell number of target cell, required for determing where to count cells
+    next_gen() - calculates whole next game state:
+        $1 - game state, required to perform calculation of next state
+2. "let" command allows evaluating arithmetic expressions  https://www.gnu.org/software/bash/manual/bash.html#index-let
+3. Because generation is already getting incremented in the main game loop
+4. Quotes are used for safely referencing variables, for example from input, as if they are missing the expression will evaluate into empty string, while when using without quotes can lead to error in the system and unexpected behavior, but we can do it if we are sure about value of the variable, like constants
