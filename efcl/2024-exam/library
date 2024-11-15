@@ -1,0 +1,420 @@
+#!/bin/bash
+
+BOOKS_PATH='books.csv'
+MEMBERS_PATH='members.csv'
+LENDINGS_PATH='lending.csv'
+
+cmd_list() {
+    local type="$1"
+
+    if [ "$type" = 'books' ]; then
+        sed 's/,,/, ,/g;s/,,/, ,/g' $BOOKS_PATH | sort -t ',' -k1n,1 -k2,2 | column -t -s ','
+    elif [ "$type" = 'members' ]; then
+        sed 's/,,/, ,/g;s/,,/, ,/g' $MEMBERS_PATH | sort -t ',' -k2,2  | column -t -s ','
+    else
+        echo "error: unrecognized argument <type>"
+        return 1
+    fi
+}
+
+cmd_search() {
+    local type="$1"
+    local key="$2"
+    
+    if [ "$type" = 'books' ]; then
+        if [ -z "$key" ]; then
+            sed 's/,,/, ,/g;s/,,/, ,/g' $BOOKS_PATH | sort -t ',' -k1n,1 -k2,2 | column -t -s ','    
+        else
+            local res=$(awk -F',' -v key="$key" 'BEGIN{IGNORECASE=1} $2 ~ "^"key {print}' $BOOKS_PATH | sed 's/,,/, ,/g;s/,,/, ,/g' | sort -t ',' -k1n,1 -k2,2 | column -t -s ',')
+            if [ -z "$res" ]; then
+                echo "info: no entry found in books for '$key'"
+            else
+                echo "$res"
+            fi
+        fi
+    elif [ "$type" = 'members' ]; then
+        if [ -z "$key" ]; then
+            sed 's/,,/, ,/g;s/,,/, ,/g' $MEMBERS_PATH | sort -t ',' -k2,2  | column -t -s ','
+        else
+            local res=$(awk -F',' -v key="$key" 'BEGIN{IGNORECASE=1} $2 ~ "^"key {print}' $MEMBERS_PATH | sed 's/,,/, ,/g;s/,,/, ,/g' | sort -t ',' -k2,2 | column -t -s ',')
+            if [ -z "$res" ]; then
+                echo "info: no entry found in members for '$key'"
+            else
+                echo "$res"
+            fi
+        fi
+    else
+        echo "error: invalid argument <type>"
+        return 1
+    fi
+}
+
+cmd_delete() {
+    local type="$1"
+    local key="$2"
+
+    if [ -z "$type" ] || [ -z "$key" ]; then
+        echo "error: missing arguments <type> and <key>"
+        return 1
+    fi
+
+    if [ "$type" = "book" ]; then
+        if ! grep -q "^$key," "$BOOKS_PATH"; then
+            echo "error: book not found"
+            return 1
+        fi
+
+        if grep -q "^$key,.*,1$" "$BOOKS_PATH"; then
+            echo "error: book already deleted"
+            return 1
+        fi
+
+        #TODO: Implement check for loans
+
+        sed -i '' -e "/^$key,/ s/,0$/,1/" "$BOOKS_PATH"
+    elif [ "$type" = "member" ]; then
+        if ! grep -q "^$key," "$MEMBERS_PATH"; then
+            echo "error: member not found"
+            return 1
+        fi
+
+        if grep -q "^$key,.*,1$" "$MEMBERS_PATH"; then
+            echo "error: member already deleted"
+            return 1
+        fi
+
+        #TODO: Implement check for loans
+
+        sed -i '' -e "/^$key,/ s/,0$/,1/" "$MEMBERS_PATH"
+    fi
+}
+
+update_book() {
+    local isbn="$1"
+    local title="$2"
+
+    #TODO: add validation
+
+    if grep -q "^$isbn," "$BOOKS_PATH"; then
+        sed -i '' -E "s/^($isbn),([^,]*),(.*)/\1,$title,\3/" "$BOOKS_PATH"
+    else
+        printf "%s,%s,,0\n" "$isbn" "$title" >> "$BOOKS_PATH"
+    fi   
+}
+
+update_member() {
+    local id="$1"
+    local name="$2"
+
+    #TODO: add validation
+
+    if grep -q "^$id," "$MEMBERS_PATH"; then
+        sed -i '' -E "s/^($id),([^,]*),(.*)/\1,$name,\3/" "$MEMBERS_PATH"
+    else
+        printf "%s,%s,,0\n" "$id" "$name" >> "$MEMBERS_PATH"
+    fi   
+}
+
+
+cmd_update() {
+    local type="$1"
+    shift
+    local args="$*"
+
+    if [ "$type" = "book" ]; then
+        update_book $args
+    elif [ "$type" = "member" ]; then
+        update_member $args
+    else
+        echo "error: invalid argument <type>"
+    fi
+}
+
+cmd_suspend() {
+    local member_id="$1"
+
+    if [ -z "$member_id" ]; then
+        echo "error: missing argument <member_id>"
+        return 1
+    fi
+
+    if ! grep -q "^$member_id," "$MEMBERS_PATH"; then
+        echo "error: member not found"
+        return 1
+    fi
+
+    sed -i '' -E "s/^($member_id,[^,]*),0,/\1,1,/" "$MEMBERS_PATH"
+}
+
+cmd_resume() {
+    local member_id="$1"
+
+    if [ -z "$member_id" ]; then
+        echo "error: missing argument <member_id>"
+        return 1
+    fi
+
+    if ! grep -q "^$member_id," "$MEMBERS_PATH"; then
+        echo "error: member not found"
+        return 1
+    fi
+
+    sed -i '' -E "s/^($member_id,[^,]*),1,/\1,0,/" "$MEMBERS_PATH"
+}
+
+is_member_exists() {
+    local member_id="$1"
+    grep -q "^$member_id," "$MEMBERS_PATH"
+}
+
+is_member_deleted() {
+    local member_id="$1"
+    grep -q "^$member_id,.*,.*,1$" "$MEMBERS_PATH"
+}
+
+is_member_suspended() {
+    local member_id="$1"
+    grep -q "^$member_id,.*,1," "$MEMBERS_PATH"
+}
+
+is_book_exists() {
+    local isbn="$1"
+    grep -q "^$isbn," "$BOOKS_PATH"
+}
+
+is_book_deleted() {
+    local isbn="$1"
+    grep -q "^$isbn,.*,.*,1$" "$BOOKS_PATH"
+}
+
+is_book_loaned() {
+    local isbn="$1"
+    grep -q "^$isbn,[^,]*,[^,]*,[^,]*,0$" "$LENDINGS_PATH"
+}
+
+get_loan_dates() {
+    local start_date=$(date "+%Y-%m-%d")
+    local end_date=$(date -v+7d "+%Y-%m-%d")
+    echo "$start_date $end_date"
+}
+
+cmd_loan() {
+    local isbn="$1"
+    local member_id="$2"
+
+    if [ -z "$isbn" ]; then
+        echo "error: missing argument <isbn>"
+        return 1
+    fi
+
+    if [ -z "$member_id" ]; then
+        echo "error: missing argument <member_id>"
+        return 1
+    fi
+
+    if ! is_book_exists "$isbn" ; then
+        echo "error: book not found"
+        return 1
+    fi
+
+    if is_book_deleted "$isbn"; then
+        echo "error: book is deleted"
+        return 1
+    fi
+
+    if ! is_member_exists "$member_id"; then
+        echo "error: member not found"
+        return 1
+    fi
+
+    if is_member_deleted "$member_id"; then
+        echo "error: member is deleted"
+        return 1
+    fi
+
+    if is_member_suspended "$member_id"; then
+        echo "error: member is suspended"
+        return 1
+    fi
+
+    # Check if book is reserved by different member
+    local reserved_by=$(grep "^$isbn," "$BOOKS_PATH" | cut -d',' -f3)
+    if [ ! -z "$reserved_by" ] && [ "$reserved_by" != "$member_id" ]; then
+        echo "error: book is reserved by another member"
+        return 1
+    fi
+
+    if is_book_loaned "$isbn"; then
+        echo "error: book is already loaned"
+        return 1
+    fi
+
+    read start_date end_date <<< $(get_loan_dates)
+    printf "%s,%s,%s,%s,0\n" "$isbn" "$member_id" "$start_date" "$end_date" >> "$LENDINGS_PATH"
+
+    # Clear reservation if book was reserved by this member
+    if [ "$reserved_by" = "$member_id" ]; then
+        sed -i '' -E "s/^($isbn),([^,]*),([^,]*),/\1,\2,,/" "$BOOKS_PATH"
+    fi
+}
+
+cmd_return() {
+    local isbn="$1"
+
+    if [ -z "$isbn" ]; then
+        echo "error: missing argument <isbn>"
+        return 1
+    fi
+
+    if ! is_book_exists "$isbn"; then
+        echo "error: lending not found"
+        return 1
+    fi
+
+    if ! is_book_loaned "$isbn"; then
+        echo "error: lending not found"
+        return 1
+    fi
+
+    sed -i '' -E "s/^($isbn,[^,]*,[^,]*,[^,]*),0$/\1,1/" "$LENDINGS_PATH"
+}
+
+is_book_reserved() {
+    local isbn="$1"
+    local reserved=$(grep "^$isbn," "$BOOKS_PATH" | cut -d',' -f3)
+    [ ! -z "$reserved" ]
+}
+
+cmd_reserve() {
+    local isbn="$1"
+    local member_id="$2"
+
+    if [ -z "$isbn" ]; then
+        echo "error: missing argument <isbn>"
+        return 1
+    fi
+
+    if [ -z "$member_id" ]; then
+        echo "error: missing argument <member_id>"
+        return 1
+    fi
+
+    if ! is_book_exists "$isbn"; then
+        echo "error: book not found"
+        return 1
+    fi
+
+    if is_book_deleted "$isbn"; then
+        echo "error: book is deleted"
+        return 1
+    fi
+
+    if ! is_member_exists "$member_id"; then
+        echo "error: member not found"
+        return 1
+    fi
+
+    if is_member_deleted "$member_id"; then
+        echo "error: member is deleted"
+        return 1
+    fi
+
+    if is_member_suspended "$member_id"; then
+        echo "error: member is suspended"
+        return 1
+    fi
+
+    if is_book_reserved "$isbn"; then
+        echo "error: book is reserved"
+        return 1
+    fi
+
+    sed -i '' -E "s/^($isbn),([^,]*),([^,]*),/\1,\2,$member_id,/" "$BOOKS_PATH"
+}
+
+get_current_date() {
+    date "+%Y-%m-%d"
+}
+
+date_to_seconds() {
+    local date_str="$1"
+    date -j -f "%Y-%m-%d" "$date_str" "+%s"
+}
+
+days_between_dates() {
+    local date1="$1"
+    local date2="$2"
+    local seconds1=$(date_to_seconds "$date1")
+    local seconds2=$(date_to_seconds "$date2")
+    echo $(( (seconds2 - seconds1) / 86400 ))
+}
+
+cmd_report() {
+    local days="$1"
+    local current_date=$(get_current_date)
+    
+    while IFS=',' read -r isbn member_id start_date end_date returned; do
+        if [ "$returned" = "1" ]; then
+            continue
+        fi
+        
+        local days_late=$(days_between_dates "$end_date" "$current_date")
+        
+        if [ ! -z "$days" ] && [ "$days_late" -lt "$days" ]; then
+            continue
+        fi
+        
+        if [ "$days_late" -le 0 ]; then
+            continue
+        fi
+        
+        local member_name=$(grep "^$member_id," "$MEMBERS_PATH" | cut -d',' -f2)
+        
+        printf "%-20s %-20s %-12s %-12s %d days late\n" \
+            "$isbn" "$member_name" "$start_date" "$end_date" "$days_late"
+        
+    done < "$LENDINGS_PATH" | column -t
+}
+
+while true; do
+    read -r -p '> ' cmd args
+
+    case "$cmd" in 
+        exit | quit)
+            exit 0
+            ;;
+        list)
+            cmd_list $args
+            ;;
+        search)
+            cmd_search $args
+            ;;
+        delete)
+            cmd_delete $args
+            ;;
+        update)
+            cmd_update $args
+            ;;
+        suspend)
+            cmd_suspend $args
+            ;;
+        resume)
+            cmd_resume $args
+            ;;
+        loan)
+            cmd_loan $args
+            ;;
+        return)
+            cmd_return $args
+            ;;
+        reserve)
+            cmd_reserve $args
+            ;;
+        report)
+            cmd_report $args
+            ;;
+        *)
+            echo "error: invalid argument <command>" #TODO: make errors codes
+            ;;
+    esac
+done

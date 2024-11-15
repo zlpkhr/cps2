@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>EMSE Chatroom</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
+      rel="stylesheet"
+    />
+    <link href="assets/stylesheets/output.css" rel="stylesheet" />
+    <script type="module" src="/chatroom/frontendChat.js"></script>
+  </head>
+  <body>
+    <div class="page-content">
+      <div class="username-section">
+        <span class="username-label">Alias: </span>
+        <input class="username-input" type="text" />
+        <button class="clear-chat-btn">Clear Chat</button>
+      </div>
+      <div class="chat-window"></div>
+      <div class="new-message-section">
+        <textarea
+          rows="3"
+          class="new-message-input"
+          placeholder="Enter your message"
+        ></textarea>
+        <button class="send-message-btn">Send</button>
+      </div>
+    </div>
+    <div class="error-message-popup">
+      <div class="message">An unexpected error occured</div>
+      <button class="close-btn"><span class="icon">&times;</span>Close</button>
+    </div>
+  </body>
+</html>
